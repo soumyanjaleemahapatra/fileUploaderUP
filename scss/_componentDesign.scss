@@ -1,0 +1,41 @@
+
+.container {
+  display: flex;
+  align-self: center;
+  border:$borderSize solid ;
+  height:500px;
+  background:#ffffff;
+  flex-wrap:wrap;
+  margin: 10px;
+}
+.fileSelectorContainer{
+  border:$borderSize;
+  height:auto;
+  width:auto;
+  margin:2px;
+}
+.container .fileUpload {
+  height:20px;
+  width:100px;
+  padding-left: 10px;
+}
+
+.container .filedrag
+{
+  border:$borderSize dashed #555;
+  border-radius: 7px;
+  color: #555;
+  height:300px;
+  width:300px;
+  margin:5px;
+  text-align: center;
+}
+
+.hover
+{
+  height:300px;
+  width:300px;
+  text-align: center;
+  border-style: solid;
+  box-shadow: inset 0 $borderSize 4px #888;
+}
