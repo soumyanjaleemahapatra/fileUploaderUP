@@ -1,7 +1,3 @@
-/**
- * Created by home on 2/27/2016.
- */
-
 /*import * as cssContent from 'stylesheets\main.css';*/
 (function(){
 
@@ -9,153 +5,213 @@
     let template = `
 <style>
 @import url(https://fonts.googleapis.com/css?family=Roboto);
-.container {
+  .container {
   display: flex;
-  align-self: center;
   font-family: 'Roboto', sans-serif;
-  /*padding:15%;*/
-  /*max-width:100%;*/
   background: #ffffff;
-  flex-wrap: wrap;
-  margin: 100px;
-  height:500px;
+  flex-wrap: nowrap;
+  padding:15vw;
+  justify-content: flex-start;
+  align-items: stretch;
   }
 
-.container .fileUpload {
+  .componentContainer{
+  border: 2px dashed red;
+  display:flex;
+  width:55vw;
+  flex-direction: column;
+  text-align: center;
 
-  width: 100px;
-  align-self: center;
+  }
+  .rightContainer{
+  border: 2px dashed red;
+  width:15vw;
+  }
+
+.fileSelector {
   color: transparent;
-  padding-top:25%;
+  display:flex;
+  align-self:flex-end;
   }
 
- .fileList {
+ .hover {
+  /**/
+  border: 1.5px dashed red;
   display:flex;
-  flex-direction:column;
+  width:55vw;
+  flex-direction: column;
   text-align: center;
-  height: 98%;
-  width:30%;
-  /*min-width: 15vh;*/
- }
-
- .file {
-  display:flex;
-  justify-content: center;
-  align-items:center;
-  background:#f7c6d5;
-  height: 15%;
-  width: 80%;
-  color:black;
-  margin-top:5px;
- }
-
-.container .filedrag {
-  display:flex;
-  flex-direction:column;
-  justify-content: center;
-  align-items:center;
-  border: 2px dashed darkgrey;
-  height: 98%;
-  /*min-width: 55vh;*/
-  width:55%;
-  text-align: center;
-  margin:5px;
-  }
-
-.hover {
-  border: 1.5px dashed #555;
-  height: 98%;
-  width: 45%;
-  background:#fff;
-  margin: 5px;
-  text-align: center;
-  align-items:center;
    }
 
- section{
- padding-top: 10%;
-
+ p{
+    /*align-self: center;*/
  }
+
+ .filePreviewAndProgress
+ {
+  height:10%;
+  width:10%;
+  }
+
+
  </style>
 
-        <div class="container" >
-                <div class="filedrag">
-
-                   <input type="file" id="myFile" class="fileUpload" multiple="multiple">
-                   <section> OR </section>
-                    <section> Drop files here </section>
-
-                </div>
-	          <div class="fileList">     </div>
+    <form id="fileUpload" action="fileSaver.js" method="post" enctype="multipart/form-data">
+        <div class="container">
+            <div class="componentContainer">
+                <p class="dropfileshere">Drop files here</p>
+                <input type="file" id="fileSelector" class="fileSelector" multiple="multiple" is=”ebfileupload” accepted-file-extensions=”jpg,png” max-file-size=”200000”>
+            </div>
+             <div class="rightContainer">  </div>
         </div>
+    </form>
     `;
 
     class FileUpload extends HTMLElement{
-
-
-       // var that;
         // Fires when an instance of the element is created.
         createdCallback(){
             this.createShadowRoot().innerHTML=template;
 
             //Grab the elements from the shadow root
             this.$container = this.shadowRoot.querySelector('.container');
-            this.$fileUpload = this.shadowRoot.querySelector('.fileUpload');
-            this.$filedrag = this.shadowRoot.querySelector('.filedrag');
-            this.$fileList = this.shadowRoot.querySelector('.fileList');
+            this.$fileSelector = this.shadowRoot.querySelector('.fileSelector');
+            this.$componentContainer = this.shadowRoot.querySelector('.componentContainer');
+            this.$rightContainer = this.shadowRoot.querySelector('.rightContainer');
+            this.$fileUpload = this.shadowRoot.querySelector('#fileUpload');
+
 
             //Event handlers
             //Event handler - File selection
-            this.$fileUpload.addEventListener('change', this.filesSelected.bind(this) );
+            this.$fileSelector.addEventListener('change', this.filesSelected.bind(this) );
+
             //File drag n drop
-            this.$filedrag.addEventListener("dragover", this.fileDragHover.bind(this));
-            this.$filedrag.addEventListener("dragleave", this.fileDragHover.bind(this));
-            this.$filedrag.addEventListener("drop", this.filesSelected.bind(this));
-            this.$filedrag.style.display = "block";
-
-
-        }
-
-        checkFileSize(maxfilesize, fileSize) {
-            return fileSize <= maxfilesize ? true : false;
-        }
-
-        checkFileType(allFileExtensions, fileType) {
-            let fileExtensions=[];
-            fileExtensions = allFileExtensions.split(",");
-            return fileType in fileExtensions ? true : false;
+            this.$componentContainer.addEventListener("dragover", this.fileDragHover.bind(this));
+            this.$componentContainer.addEventListener("dragleave", this.fileDragHover.bind(this));
+            this.$componentContainer.addEventListener("drop", this.filesSelected.bind(this));
+            this.$componentContainer.style.display = "block";
         }
 
         filesSelected(e)
         {
-            let filesInnerHtml="";
-            let f = e.type=='change' ? this.$fileUpload.files : e.dataTransfer.files;
+            let validFilesList=[];
+            let invalidFilesList=[];
+            if (e.type==drop)
+            {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            let f = e.type=='change' ? this.$fileSelector.files : e.dataTransfer.files;
             // process all File objects
-            for (var i=0; i<f.length;i++){
+            for (var i=0; i<f.length;i++)
+            {
                 //Checking file attributes
+                //TODO: take file attributes from input tag
+               // let isValidFileSize = this.checkFileSize(this.getAttribute('max-file-size'), f[i].size);
                 let isValidFileSize = this.checkFileSize(this.getAttribute('max-file-size'), f[i].size);
                 //Checking file type
                 let fileSplits= f[i].name.split('.');
                 let fileType =fileSplits[fileSplits.length-1];
                 let isValidFileType = this.checkFileType(this.getAttribute('accepted-file-extensions'),fileType);
-                if (isValidFileSize && isValidFileType)
-                    filesInnerHtml+="<div class = 'file'>"+ f[i].name + "</div>";
+                if (isValidFileSize && isValidFileType){
+                    validFilesList.push(f[i]);
+                }
+                else
+                {
+                    invalidFilesList.push(f[i]);
+                }
+                   // filesInnerHtml+="<div class = 'file'>"+ f[i].name + "</div>";
             }
-            this.$fileList.innerHTML=filesInnerHtml;
+            //Set the valid file list as a class property
+            this.$validFileList=validFilesList;
+            this.previewFiles(validFilesList);
+            this.upload(validFilesList);
+            //this.$fileList.innerHTML=filesInnerHtml;
+        }
 
+        previewFiles(validFilesList)
+        {
+            var rightContainerHTML = "";
+            var componentContainerHTML = "";
+            for (var i=0; i<validFilesList.length;i++)
+            {
+                var filePreviewHTML = "";
+                var fileInfoHTML ="";
+                //Only preview image files
+                if(validFilesList[i].type.toLowerCase().indexOf('image')>-1)
+                {
+                    var reader = new FileReader();
+                    this.$currentFile = validFilesList[i];
+                    reader.addEventListener("load", this.getImgThumbNail.bind(this));
+                    // read the image file as a data URL.
+                    reader.readAsDataURL(validFilesList[i]);
+                    fileInfoHTML ="<div class = 'fileInfo'>"+ this.$currentFile.name
+                                + this.$currentFile.size + "</div>"
+                                + "<div class = 'fileStatus' id='" + this.$currentFile.name + "_status'></div>";
+                }
+                else
+                {
+                    filePreviewHTML ="<div class = 'file'>"+ validFilesList[i].name + "</div>";
+                    fileInfoHTML ="<div class = 'fileInfo'>"+ validFilesList[i].name + "</div>"
+                        + this.$currentFile.size + "</div>"
+                        + "<div class = 'fileStatus' id='" + validFilesList[i].name + "_status'></div>";
+                }
+               // console.log(filePreviewHTML);
+               // console.log(fileInfoHTML);
+                rightContainerHTML += fileInfoHTML;
+                componentContainerHTML += filePreviewHTML;
+            }
+            this.$rightContainer.innerHTML += rightContainerHTML;
+            this.$componentContainer.innerHTML += componentContainerHTML;
+        }
 
+        //Extract image thumbnail
+        getImgThumbNail(e)
+        {
+            var filePreviewHTML = "";
+            filePreviewHTML ="<div class = 'filePreviewAndProgress' id='" + this.$validFileList.shift().name + "_preview'>"
+                + "<img id='image' src='" + e.target.result +  "' style='height:100px; width:100px;'/>"
+                + "</div>";
+            // get loaded data and render thumbnail.
+            //this.$imageSrc = e.target.result;
+            this.$componentContainer.innerHTML += filePreviewHTML;
+        }
+
+        //Uploading files to server
+        upload(validFilesList){
+
+            for (var i=0; i<validFilesList.length;i++)
+            {
+                //Form data object to store a file
+                let formData  = new FormData();
+                formData.append("file" , validFilesList[i]);
+                //XHR to upload the file
+                let httpReq=new XMLHttpRequest();
+                httpReq.open("POST",this.$fileUpload.action,true);
+                httpReq.setRequestHeader("FILENAME",validFilesList[i].name);
+                httpReq.send(formData);
+            }
         }
 
         fileDragHover(e)
         {
             e.stopPropagation();
             e.preventDefault();
-            console.log (e.type);
-            this.$filedrag.className = (e.type == "dragover" ? "hover" : "container filedrag");
+            //console.log (e.type);
+            this.$componentContainer.className = (e.type == "dragover" ? "hover" : "componentContainer");
             //this.$filedrag.className = "hover";
         }
 
+        //Validating file size
+        checkFileSize(maxfilesize, fileSize) {
+            return fileSize/1024 <= maxfilesize ? true : false;
+        }
+        //Validating file type
 
+        checkFileType(allFileExtensions, fileType) {
+            let fileExtensions=[];
+            fileExtensions = allFileExtensions.split(",");
+            return fileExtensions.indexOf(fileType) > -1 ? true : false;
+        }
     }
 
     document.registerElement('file-upload', FileUpload);
