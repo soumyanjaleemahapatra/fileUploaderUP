@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Date widget in ES2015</title>
+    <title>File uploader</title>
     <link rel="stylesheet" type="text/scss" href="stylesheets/main.css">
     <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
     <script src="components/es5/temp/date-widget.es2015.comp.js"></script>
@@ -10,9 +10,13 @@
 </head>
 
 <body>
+    <div class="layoutContainer">
+        <div class="leftContainer">
+            <h1>Erfassen Sie Ihren Event</h1>
+            <file-upload max-file-size="2000000" accepted-file-extensions="jpg,png,pdf"></file-upload>
+        </div>
+        <div class="rightContainer"> </div>
+    </div>
 
-    <file-upload max-file-size="2000000" accepted-file-extensions="jpg,png,pdf"></file-upload>
 </body>
-
-
 </html>
