@@ -1,0 +1,86 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,500,900);
+
+.componentContainer{
+  display:flex;
+  width:55vw;
+  height:90vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: 'Roboto', serif;
+  font-weight: 900;
+  }
+
+
+.dropfileshere{
+   @extend .componentContainer;
+   height:75%;
+   font-size:xx-large;
+ }
+
+.dropfileshere .blur{
+  @extend .dropfileshere;
+  color:transparent;
+  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.fileSelector {
+  @extend .componentContainer;
+  height:20px;
+  width:150px;
+  font-size:medium;
+  color: transparent;
+  margin:5%;
+  align-self:center;
+}
+
+#messageHolder{
+  @extend .componentContainer;
+  height:15%;
+  font-size:medium;
+  border: 2px dashed deeppink;
+}
+
+.filePreviewAndProgress
+{
+  @extend .componentContainer;
+  border: 2px dashed blue;
+  height:100px;
+  width:100px;
+  order: 1;
+}
+
+#image{
+  @extend .componentContainer;
+  height:100px;
+  width:100px;
+}
+
+
+/*
+
+.fileSelector {
+  color: transparent;
+  display:flex;
+  align-self:flex-end;
+
+  border: 2px dashed deeppink;
+}
+
+.hover {
+
+  border: 1.5px dashed yellow;
+  display:flex;
+  width:55vw;
+  flex-direction: column;
+  text-align: center;
+}
+
+.filePreviewAndProgress
+{
+
+  border: 2px dashed blue;
+  height:10%;
+  width:10%;
+}*/
