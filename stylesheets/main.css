@@ -1,5 +1,5 @@
 body {
-  height: 100px;
+  display: flex;
   background: #e12a92;
   /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(90deg, #e12a92, #f1731c);
@@ -9,4 +9,41 @@ body {
   background: -moz-linear-gradient(90deg, #e12a92, #f1731c);
   /* For Firefox 3.6 to 15 */
   background: linear-gradient(90deg, #e12a92, #f1731c);
-  /* Standard syntax (must be last) */ }
+  /* Standard syntax*/
+  justify-content: center;
+  align-items: center;
+  padding: 15vw;
+  flex-wrap: nowrap; }
+
+.layoutContainer, .leftContainer, .rightContainer {
+  display: flex;
+  background-color: #ffffff;
+  width: 100vw;
+  height: 100vh;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start; }
+
+.leftContainer {
+  width: 55vw;
+  flex-direction: column; }
+
+.rightContainer {
+  width: 15vw;
+  background: -moz-linear-gradient(233deg, #ff9661 0%, #f5b3b4 100%);
+  /* ff3.6+ */
+  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #f5b3b4), color-stop(100%, #ff9661));
+  /* safari4+,chrome */
+  background: -webkit-linear-gradient(233deg, #ff9661 0%, #f5b3b4 100%);
+  /* safari5.1+,chrome10+ */
+  background: -o-linear-gradient(233deg, #ff9661 0%, #f5b3b4 100%);
+  /* opera 11.10+ */
+  background: -ms-linear-gradient(233deg, #ff9661 0%, #f5b3b4 100%);
+  /* ie10+ */
+  background: linear-gradient(217deg, #ff9661 0%, #f5b3b4 100%);
+  /* w3c */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FF9661', endColorstr='#f5b3b4',GradientType=0 );
+  /* ie6-9 */ }
+
+h1 {
+  margin-bottom: 10px; }
